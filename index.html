@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuraFocus - Premium Study Companion</title>
+    <!-- Google Fonts for Premium Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons for Premium Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        study: {
+                            sand: {
+                                50: '#FAF8F5',
+                                100: '#F5EFEB',
+                                200: '#EADFD7',
+                                300: '#DCCAC0',
+                                800: '#3D342E',
+                                900: '#231B17',
+                            },
+                            olive: {
+                                100: '#E6EAE5',
+                                500: '#607264',
+                                600: '#4D5E51',
+                                700: '#3E4C41',
+                                800: '#2C362E',
+                            },
+                            gold: '#C5A880',
+                        },
+                        focus: {
+                            darkBg: '#0F1210',
+                            panel: '#181E1A',
+                            accent: '#D3AC79',
+                            muted: '#7C8A81',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        serif: ['"Playfair Display"', 'serif'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-8px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-study-sand-50 text-study-sand-900 dark:bg-focus-darkBg dark:text-study-olive-100 min-h-screen relative selection:bg-study-gold selection:text-white">
+
+    <!-- Ambient Rotating 3D Particle Space Background (The 8D Visual Space) -->
+    <canvas id="ambientCanvas" class="fixed inset-0 w-full h-full pointer-events-none z-0"></canvas>
+
+    <!-- Global Layout Wrapper -->
+    <div class="relative z-10 flex flex-col min-h-screen">
+        
+        <!-- HEADER -->
+        <header class="w-full px-6 py-4 md:px-12 flex justify-between items-center border-b border-study-sand-200/50 dark:border-study-olive-800/20 backdrop-blur-md">
+            <div class="flex items-center space-x-3">
+                <div class="w-9 h-9 rounded-full bg-study-gold flex items-center justify-center text-white font-serif italic text-lg shadow-sm">
+                    A
+                </div>
+                <div>
+                    <h1 class="font-serif italic text-lg tracking-wide">AuraFocus</h1>
+                    <p class="text-[10px] tracking-widest uppercase opacity-60">Ultimate 8D Study Space</p>
+                </div>
+            </div>
+
+            <!-- Header controls -->
+            <div class="flex items-center space-x-4">
+                <!-- Zen mode quick-toggle -->
+                <button id="zenBtn" class="p-2.5 rounded-full hover:bg-study-sand-200/50 dark:hover:bg-study-olive-800/40 transition-colors duration-200 group flex items-center space-x-1" title="Toggle Zen Mode (Clean Focus Screen)">
+                    <i data-lucide="minimize-2" class="w-4.5 h-4.5 group-hover:scale-110 transition-transform"></i>
+                    <span class="text-xs hidden md:inline opacity-75">Zen Mode</span>
+                </button>
+
+                <!-- Audio control panel shortcut -->
+                <button id="audioControlBtn" class="p-2.5 rounded-full hover:bg-study-sand-200/50 dark:hover:bg-study-olive-800/40 transition-colors duration-200 group flex items-center space-x-1" title="Spatial Focus Ambient Generator">
+                    <i data-lucide="headphones" class="w-4.5 h-4.5 text-study-gold animate-pulse-slow"></i>
+                    <span class="text-xs hidden md:inline text-study-gold font-medium">8D Audio</span>
+                </button>
+
+                <!-- Theme switch -->
+                <button id="themeToggle" class="p-2.5 rounded-full bg-study-sand-100 dark:bg-study-olive-800/40 hover:scale-105 active:scale-95 transition-all shadow-inner" title="Toggle Aesthetic Theme">
+                    <i data-lucide="moon" class="w-4.5 h-4.5 text-study-olive-600 dark:hidden"></i>
+                    <i data-lucide="sun" class="w-4.5 h-4.5 text-study-gold hidden dark:block"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- MAIN HUB CONTAINER -->
+        <main class="flex-grow max-w-7xl w-full mx-auto px-4 md:px-8 py-6 md:py-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+                <!-- LEFT PANEL: Atmospheric Soundscape & Spatial Deck (Lg: col-span-3) -->
+                <div id="leftSidebar" class="lg:col-span-3 flex flex-col space-y-6 transition-all duration-500 ease-in-out">
+                    
+                        <!-- Cozy 8D Spatial Audio Suite (Generated in real-time) -->
+                        <div class="premium-glass-light dark:premium-glass-dark rounded-3xl p-6 shadow-xl relative overflow-hidden group">
+                            <div class="absolute -right-8 -top-8 w-24 h-24 bg-study-gold/10 rounded-full blur-xl transition-all duration-500 group-hover:bg-study-gold/20"></div>
+                            
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="flex items-center space-x-2">
+                                    <i data-lucide="music-3" class="w-5 h-5 text-study-gold"></i>
+                                    <h2 class="font-semibold text-sm tracking-wide">8D Study Audio</h2>
+                                </div>
+                                <span id="audioStatus" class="text-[10px] px-2 py-0.5 rounded-full bg-study-sand-200 dark:bg-study-olive-800/60 text-study-olive-600 dark:text-study-gold font-medium">Inactive</span>
+                            </div>
+
+                            <p class="text-xs text-study-olive-600 dark:text-study-olive-400 mb-4 leading-relaxed">
+                                Synthesizes pure 8D binaural frequencies, cozy rain, and brown noise panning around your coordinates. <span class="font-medium text-study-gold">Put headphones on.</span>
+                            </p>
+
+                            <!-- Wave Visualizer Simulation -->
+                            <div class="h-10 flex items-center justify-center space-x-1 bg-study-sand-100/40 dark:bg-study-olive-800/20 rounded-xl mb-4 overflow-hidden border border-study-sand-200/30 dark:border-study-olive-800/10">
+                                <div id="soundwave" class="flex items-end justify-center space-x-1 h-6 w-full opacity-30">
+                                    <div class="w-1 bg-study-gold rounded-full h-3" style="animation-delay: 0.1s"></div>
+                                    <div class="w-1 bg-study-gold rounded-full h-5" style="animation-delay: 0.4s"></div>
+                                    <div class="w-1 bg-study-gold rounded-full h-2" style="animation-delay: 0.2s"></div>
+                                    <div class="w-1 bg-study-gold rounded-full h-6" style="animation-delay: 0.5s"></div>
+                                    <div class="w-1 bg-study-gold rounded-full h-4" style="animation-delay: 0.3s"></div>
+                                    <div class="w-1 bg-study-gold rounded-full h-1" style="animation-delay: 0.6s"></div>
+                                    <div class="w-1 bg-study-gold rounded-full h-5" style="animation-delay: 0.1s"></div>
+                                </div>
+                            </div>
+
+                            <!-- Ambient Choices -->
+                            <div class="space-y-3">
+                                <button id="ambientFocusBtn" class="w-full flex items-center justify-between p-2.5 rounded-xl border border-study-sand-200/50 dark:border-study-olive-800/20 hover:bg-study-sand-100/60 dark:hover:bg-study-olive-800/30 transition-all text-left group">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-8 h-8 rounded-lg bg-study-gold/10 flex items-center justify-center text-study-gold group-hover:scale-105 transition-transform">
+                                            <i data-lucide="brain-circuit" class="w-4 h-4"></i>
+                                        </div>
+                                        <div>
+                                            <span class="text-xs font-semibold block">8D Binaural Wave</span>
+                                            <span class="text-[10px] opacity-60 block">Alpha Focus beats</span>
+                                        </div>
+                                    </div>
+                                    <i data-lucide="play" id="icon-binaural" class="w-3.5 h-3.5 opacity-60"></i>
+                                </button>
+
+                                <button id="ambientRainBtn" class="w-full flex items-center justify-between p-2.5 rounded-xl border border-study-sand-200/50 dark:border-study-olive-800/20 hover:bg-study-sand-100/60 dark:hover:bg-study-olive-800/30 transition-all text-left group">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-8 h-8 rounded-lg bg-study-gold/10 flex items-center justify-center text-study-gold group-hover:scale-105 transition-transform">
+                                            <i data-lucide="cloud-rain" class="w-4 h-4"></i>
+                                        </div>
+                                        <div>
+                                            <span class="text-xs font-semibold block">Cozy Study Rain</span>
+                                            <span class="text-[10px] opacity-60 block">Synthesized raindrops</span>
+                                        </div>
+                                    </div>
+                                    <i data-lucide="play" id="icon-rain" class="w-3.5 h-3.5 opacity-60"></i>
+                                </button>
+
+                                <button id="ambientBrownBtn" class="w-full flex items-center justify-between p-2.5 rounded-xl border border-study-sand-200/50 dark:border-study-olive-800/20 hover:bg-study-sand-100/60 dark:hover:bg-study-olive-800/30 transition-all text-left group">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-8 h-8 rounded-lg bg-study-gold/10 flex items-center justify-center text-study-gold group-hover:scale-105 transition-transform">
+                                            <i data-lucide="waves" class="w-4 h-4"></i>
+                                        </div>
+                                        <div>
+                                            <span class="text-xs font-semibold block">Deep Brown Noise</span>
+                                            <span class="text-[10px] opacity-60 block">Ethereal sensory isolation</span>
+                                        </div>
+                                    </div>
+                                    <i data-lucide="play" id="icon-brown" class="w-3.5 h-3.5 opacity-60"></i>
+                                </button>
+                            </div>
+
+                            <!-- Volume & Spatial Panning control -->
+                            <div class="mt-4 pt-4 border-t border-study-sand-200/50 dark:border-study-olive-800/10 space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-[11px] opacity-60">Master Gain</span>
+                                    <span id="volumeVal" class="text-[10px] font-mono font-bold text-study-gold">70%</span>
+                                </div>
+                                <input type="range" id="masterVolume" min="0" max="100" value="70" class="w-full accent-study-gold bg-study-sand-200 dark:bg-study-olive-800/40 h-1.5 rounded-lg slider-thumb transition-all appearance-none outline-none">
+                                
+                                <!-- Premium visual showing spatial modulation speed -->
+                                <div class="flex items-center justify-between">
+                                    <span class="text-[11px] opacity-60">8D Spatial Rotation Speed</span>
+                                    <span id="rotationSpeedVal" class="text-[10px] font-mono font-bold text-study-gold">Normal</span>
+                                </div>
+                                <input type="range" id="spatialSpeed" min="5" max="40" value="20" class="w-full accent-study-gold bg-study-sand-200 dark:bg-study-olive-800/40 h-1.5 rounded-lg slider-thumb transition-all appearance-none outline-none">
+                            </div>
+                        </div>
+
+                        <!-- Focus Stats Deck -->
+                        <div class="premium-glass-light dark:premium-glass-dark rounded-3xl p-6 shadow-xl relative overflow-hidden">
+                            <h3 class="font-semibold text-sm tracking-wide mb-3 flex items-center space-x-2">
+                                <i data-lucide="line-chart" class="w-4 h-4 text-study-gold"></i>
+                                <span>Focus Analytics</span>
+                            </h3>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="p-3 bg-study-sand-100/50 dark:bg-study-olive-800/20 rounded-2xl text-center">
+                                    <span class="text-[10px] uppercase opacity-55 block">Completed</span>
+                                    <span id="statSessions" class="text-xl font-bold font-serif text-study-gold mt-1 block">0</span>
+                                    <span class="text-[9px] opacity-40">sessions</span>
+                                </div>
+                                <div class="p-3 bg-study-sand-100/50 dark:bg-study-olive-800/20 rounded-2xl text-center">
+                                    <span class="text-[10px] uppercase opacity-55 block">Focus Time</span>
+                                    <span id="statMinutes" class="text-xl font-bold font-serif text-study-gold mt-1 block">0m</span>
+                                    <span class="text-[9px] opacity-40">today</span>
+                                </div>
+                            </div>
+                            <p class="text-[11px] text-center italic opacity-60 mt-4 font-serif">"Quiet concentration produces golden outcomes."</p>
+                        </div>
+
+                    </div>
+
+                    <!-- MIDDLE: The Premium Countdown Engine (Lg: col-span-6) -->
+                    <div id="centerArea" class="lg:col-span-6 flex flex-col items-center space-y-6 perspective-container transition-all duration-500 ease-in-out">
+                        
+                            <!-- Main Aesthetic Countdown Card (Features 3D perspective mouse-tilt) -->
+                            <div id="timerCard" class="w-full premium-glass-light dark:premium-glass-dark rounded-[36px] p-6 md:p-10 shadow-2xl flex flex-col items-center relative overflow-hidden focus-glow tilt-card border border-white/40 dark:border-study-olive-800/10">
+                                
+                                <!-- Top subtle subtle dynamic lights -->
+                                <div class="absolute -left-16 -top-16 w-36 h-36 bg-study-gold/5 rounded-full blur-2xl"></div>
+                                <div class="absolute -right-16 -bottom-16 w-36 h-36 bg-study-gold/5 rounded-full blur-2xl"></div>
+
+                                <!-- active task spotlight flag -->
+                                <div id="spotlightTaskBanner" class="hidden animate-bounce text-xs font-semibold px-4 py-1.5 rounded-full bg-study-gold/15 text-study-gold border border-study-gold/20 mb-6 flex items-center space-x-2">
+                                    <i data-lucide="crosshair" class="w-3.5 h-3.5 animate-spin"></i>
+                                    <span id="spotlightTaskTitle">Focusing on: Math Prep</span>
+                                </div>
+
+                                <!-- Modern Segment / mode selector pills -->
+                                <div class="w-full max-w-sm flex p-1.5 bg-study-sand-200/50 dark:bg-study-olive-800/30 rounded-full relative mb-10 overflow-hidden text-xs font-medium">
+                                    <button id="modePomodoro" class="flex-1 py-2 rounded-full relative z-10 text-study-sand-900 dark:text-study-olive-100 font-semibold transition-colors duration-300">Pomodoro</button>
+                                    <button id="modeBreakShort" class="flex-1 py-2 rounded-full relative z-10 text-study-olive-600 dark:text-study-olive-400 transition-colors duration-300">Short Break</button>
+                                    <button id="modeBreakLong" class="flex-1 py-2 rounded-full relative z-10 text-study-olive-600 dark:text-study-olive-400 transition-colors duration-300">Long Break</button>
+                                    <button id="modeCustom" class="flex-1 py-2 rounded-full relative z-10 text-study-olive-600 dark:text-study-olive-400 transition-colors duration-300 flex items-center justify-center space-x-1">
+                                        <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
+                                        <span>Custom</span>
+                                    </button>
+                                    
+                                    <!-- Smooth Sliding Pill Background Tracker -->
+                                    <div id="slidingPill" class="absolute top-1.5 bottom-1.5 left-1.5 w-[calc(25%-3px)] bg-white dark:bg-study-olive-700/60 rounded-full shadow-md transition-all duration-300 ease-out z-0"></div>
+                                </div>
+
+                                <!-- Custom inputs (Visible when "Custom" mode selected) -->
+                                <div id="customTimerForm" class="hidden flex flex-col items-center bg-study-sand-100/80 dark:bg-study-olive-800/20 p-5 rounded-2xl w-full max-w-md border border-study-sand-200/50 dark:border-study-olive-800/10 mb-8 transition-all scale-95 opacity-0">
+                                    <span class="text-[11px] font-bold uppercase tracking-wider text-study-gold mb-3">Set Custom Session Length</span>
+                                    <div class="flex items-center space-x-3">
+                                        <div class="flex flex-col items-center">
+                                            <span class="text-[10px] opacity-60">Hours</span>
+                                            <input type="number" id="customHrs" min="0" max="23" value="0" class="w-16 bg-white dark:bg-study-olive-800 border border-study-sand-200 dark:border-study-olive-700 rounded-xl p-2 text-center text-lg font-bold font-mono text-study-gold shadow-sm outline-none focus:ring-1 focus:ring-study-gold">
+                                        </div>
+                                        <span class="text-xl font-bold pb-2 text-study-gold">:</span>
+                                        <div class="flex flex-col items-center">
+                                            <span class="text-[10px] opacity-60">Minutes</span>
+                                            <input type="number" id="customMins" min="0" max="59" value="25" class="w-16 bg-white dark:bg-study-olive-800 border border-study-sand-200 dark:border-study-olive-700 rounded-xl p-2 text-center text-lg font-bold font-mono text-study-gold shadow-sm outline-none focus:ring-1 focus:ring-study-gold">
+                                        </div>
+                                        <span class="text-xl font-bold pb-2 text-study-gold">:</span>
+                                        <div class="flex flex-col items-center">
+                                            <span class="text-[10px] opacity-60">Seconds</span>
+                                            <input type="number" id="customSecs" min="0" max="59" value="0" class="w-16 bg-white dark:bg-study-olive-800 border border-study-sand-200 dark:border-study-olive-700 rounded-xl p-2 text-center text-lg font-bold font-mono text-study-gold shadow-sm outline-none focus:ring-1 focus:ring-study-gold">
+                                        </div>
+                                    </div>
+                                    <button id="applyCustomBtn" class="mt-4 text-xs font-semibold tracking-wide bg-study-gold hover:bg-study-gold/95 active:scale-95 text-white px-5 py-2 rounded-xl shadow-md transition-all">
+                                        Set Countdown
+                                    </button>
+                                </div>
+
+                                <!-- Beautiful 3D Focus Orbit Dial & Timer Ring -->
+                                <div class="relative w-72 h-72 md:w-80 md:h-80 flex items-center justify-center select-none">
+                                    
+                                    <!-- Behind shadow elements -->
+                                    <div class="absolute inset-4 rounded-full bg-study-gold/3 opacity-20 filter blur-xl animate-pulse-slow"></div>
+                                    
+                                    <!-- Smooth SVG Dial Overlay for Progress -->
+                                    <svg class="absolute inset-0 w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                                        <circle cx="50" cy="50" r="44" class="stroke-study-sand-200/40 dark:stroke-study-olive-800/30" stroke-width="2.5" fill="transparent"></circle>
+                                        <circle id="countdownRing" cx="50" cy="50" r="44" class="stroke-study-gold transition-all duration-1000 ease-linear" stroke-width="2.5" fill="transparent" stroke-dasharray="276.4" stroke-dashoffset="0" stroke-linecap="round"></circle>
+                                    </svg>
+
+                                    <!-- Absolute Central Typography -->
+                                    <div class="flex flex-col items-center justify-center relative z-10 text-center">
+                                        <span id="currentPhaseLabel" class="text-[11px] font-bold tracking-widest uppercase text-study-gold opacity-80 mb-1">focus session</span>
+                                        <span id="countdownDisplay" class="text-6xl md:text-7xl font-light font-mono select-none tracking-tighter text-study-sand-900 dark:text-study-olive-100">
+                                            25:00
+                                        </span>
+                                        <div class="flex items-center space-x-1.5 mt-2">
+                                            <span id="dot1" class="w-1.5 h-1.5 bg-study-gold/30 rounded-full transition-all"></span>
+                                            <span id="dot2" class="w-1.5 h-1.5 bg-study-gold/30 rounded-full transition-all"></span>
+                                            <span id="dot3" class="w-1.5 h-1.5 bg-study-gold/30 rounded-full transition-all"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Tactical Premium Action Bar controls -->
+                                <div class="flex items-center space-x-6 mt-8 relative z-10 w-full justify-center">
+                                    <button id="resetBtn" class="w-12 h-12 rounded-full border border-study-sand-200/50 dark:border-study-olive-800/30 flex items-center justify-center bg-study-sand-100/40 dark:bg-study-olive-800/10 hover:bg-study-sand-200 dark:hover:bg-study-olive-800/40 text-study-olive-600 dark:text-study-olive-400 active:scale-90 transition-all hover:shadow-sm" title="Reset Session">
+                                        <i data-lucide="rotate-ccw" class="w-5 h-5"></i>
+                                    </button>
+
+                                    <button id="playPauseBtn" class="px-8 py-4 rounded-full bg-gradient-to-r from-study-gold to-[#D4B388] text-white flex items-center space-x-3 shadow-lg shadow-study-gold/25 hover:shadow-xl hover:shadow-study-gold/30 hover:-translate-y-0.5 active:translate-y-0 active:scale-95 transition-all group font-semibold text-sm tracking-wide">
+                                        <i id="playIcon" data-lucide="play" class="w-5 h-5 fill-white text-white group-hover:scale-105 transition-transform"></i>
+                                        <span id="playText">Begin Session</span>
+                                    </button>
+
+                                    <button id="skipBtn" class="w-12 h-12 rounded-full border border-study-sand-200/50 dark:border-study-olive-800/30 flex items-center justify-center bg-study-sand-100/40 dark:bg-study-olive-800/10 hover:bg-study-sand-200 dark:hover:bg-study-olive-800/40 text-study-olive-600 dark:text-study-olive-400 active:scale-90 transition-all hover:shadow-sm" title="Skip Interval">
+                                        <i data-lucide="skip-forward" class="w-5 h-5"></i>
+                                    </button>
+                                </div>
+
+                                <div class="mt-8 pt-6 border-t border-study-sand-200/50 dark:border-study-olive-800/10 w-full flex justify-center">
+                                    <button id="toggleStopwatchBtn" class="text-xs font-semibold tracking-wide text-study-olive-600 hover:text-study-gold dark:text-study-olive-400 dark:hover:text-study-gold transition-colors flex items-center space-x-1.5 py-1 px-3.5 rounded-full hover:bg-study-sand-200/30 dark:hover:bg-study-olive-800/20">
+                                        <i data-lucide="stopwatch" class="w-3.5 h-3.5"></i>
+                                        <span id="stopwatchToggleText">Switch to Stopwatch Mode</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="w-full premium-glass-light dark:premium-glass-dark rounded-[24px] p-5 shadow-lg flex items-center justify-between border border-study-sand-200/40 dark:border-study-olive-800/10 text-xs">
+                                <div class="flex items-center space-x-3">
+                                    <div class="p-2 rounded-xl bg-study-gold/10 text-study-gold">
+                                        <i data-lucide="bell-ring" class="w-4.5 h-4.5 animate-bounce"></i>
+                                    </div>
+                                    <div>
+                                        <span class="font-semibold block">Synth Notification Alarm</span>
+                                        <span class="opacity-60 block">Synthesizes cozy chime melody on completion</span>
+                                    </div>
+                                </div>
+                                <button id="testAlarmBtn" class="px-3.5 py-1.5 rounded-xl bg-study-sand-200/50 dark:bg-study-olive-800/30 text-[10px] font-bold text-study-gold uppercase tracking-wider hover:bg-study-gold hover:text-white transition-all">
+                                    Test Play
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="rightSidebar" class="lg:col-span-3 flex flex-col space-y-6 transition-all duration-500 ease-in-out">
+                            <div class="premium-glass-light dark:premium-glass-dark rounded-3xl p-6 shadow-xl relative flex flex-col h-[420px]">
+                                <div class="flex items-center justify-between mb-4 flex-shrink-0">
+                                    <div class="flex items-center space-x-2">
+                                        <i data-lucide="check-square" class="w-5 h-5 text-study-gold"></i>
+                                        <h2 class="font-semibold text-sm tracking-wide">Study Tasks</h2>
+                                    </div>
+                                    <span id="taskCount" class="text-[10px] px-2.5 py-0.5 rounded-full bg-study-sand-200 dark:bg-study-olive-800/60 font-mono font-bold">0 / 0</span>
+                                </div>
+
+                                <form id="taskForm" class="flex space-x-2 mb-4 flex-shrink-0">
+                                    <input type="text" id="taskInput" placeholder="Add study goal..." required maxlength="45" class="flex-grow bg-white dark:bg-study-olive-800/60 border border-study-sand-200 dark:border-study-olive-800/40 rounded-xl px-3 py-2 text-xs text-study-sand-900 dark:text-study-olive-100 outline-none focus:ring-1 focus:ring-study-gold transition-all">
+                                    <button type="submit" class="w-9 h-9 bg-study-gold text-white rounded-xl flex items-center justify-center hover:bg-study-gold/90 transition-colors active:scale-95" title="Add focus goal">
+                                        <i data-lucide="plus" class="w-4 h-4"></i>
+                                    </button>
+                                </form>
+
+                                <div id="taskList" class="flex-grow overflow-y-auto space-y-3 pr-1 scrollbar-thin scrollbar-thumb-study-gold">
+                                    <div id="emptyTasksState" class="h-full flex flex-col items-center justify-center text-center p-4">
+                                        <i data-lucide="sparkles" class="w-8 h-8 opacity-30 text-study-gold mb-2 animate-pulse"></i>
+                                        <span class="text-xs font-semibold opacity-60">Your canvas is clear</span>
+                                        <span class="text-[10px] opacity-40 leading-relaxed mt-1">Add goals to stay highly centered during your timer sessions.</span>
+                                    </div>
+                                </div>
+
+                                <div class="text-[10px] text-center opacity-40 mt-3 pt-3 border-t border-study-sand-200/50 dark:border-study-olive-800/10 flex-shrink-0">
+                                    Tap on a task bubble to pin it as your active focus spotlight.
+                                </div>
+                            </div>
+
+                            <div class="premium-glass-light dark:premium-glass-dark rounded-3xl p-5 shadow-xl relative overflow-hidden text-xs">
+                                <span class="font-bold text-[10px] uppercase tracking-wider text-study-gold block mb-2">How it works</span>
+                                <ul class="space-y-2 leading-relaxed opacity-75 list-disc pl-3">
+                                    <li>Each work interval is 25 mins. After 4 focus phases, treat yourself to a long break.</li>
+                                    <li>Hovering and moving your mouse over the dashboard tilts cards in 3D, creating a rich volumetric space.</li>
+                                    <li>8D Audio generates panning signals matching alpha frequencies to focus your visual and hearing attention.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                </main>
+
+        <!-- ZEN MODE FLOATING INTERFACE (Hidden by default, triggered by Zen Toggle) -->
+        <div id="zenOverlay" class="fixed inset-0 bg-study-sand-50/95 dark:bg-focus-darkBg/95 backdrop-blur-3xl z-40 hidden flex-col items-center justify-center transition-all duration-700 opacity-0 pointer-events-none">
+            
+            <!-- Zen Header inside overlay -->
+            <div class="absolute top-6 left-6 right-6 flex justify-between items-center w-[calc(100%-3rem)] max-w-5xl mx-auto">
+                <div class="flex items-center space-x-2">
+                    <i data-lucide="peace" class="w-5 h-5 text-study-gold animate-spin" style="animation-duration: 10s"></i>
+                    <span class="font-serif italic text-sm tracking-wide">AuraFocus Zen Space</span>
+                </div>
+                <button id="exitZenBtn" class="px-4 py-2 rounded-full border border-study-sand-200/60 dark:border-study-olive-800/30 hover:bg-study-sand-200/40 dark:hover:bg-study-olive-800/40 text-xs font-semibold flex items-center space-x-1.5 transition-all">
+                    <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
+                    <span>Exit Zen Mode</span>
+                </button>
+            </div>
+
+            <!-- Zen Center Big Timer -->
+            <div class="text-center space-y-4 max-w-lg px-6 flex flex-col items-center">
+                <span id="zenPhaseLabel" class="text-xs uppercase tracking-[0.25em] font-bold text-study-gold">FOCUSING SECURELY</span>
+                
+                <!-- Zen Giant Digital Counter -->
+                <h2 id="zenCountdown" class="text-8xl md:text-9xl font-light font-mono tracking-tighter text-study-sand-900 dark:text-study-olive-100">
+                    25:00
+                </h2>
+
+                <!-- Active task inside Zen -->
+                <p id="zenActiveTaskText" class="text-sm font-serif italic text-study-gold opacity-80 max-w-sm"></p>
+
+                <!-- Small control panel inside zen -->
+                <div class="flex items-center space-x-4 pt-6">
+                    <button id="zenPlayPauseBtn" class="w-12 h-12 rounded-full bg-study-gold text-white flex items-center justify-center shadow-md active:scale-90 transition-all">
+                        <i id="zenPlayIcon" data-lucide="play" class="w-5 h-5 fill-white"></i>
+                    </button>
+                    <button id="zenResetBtn" class="w-10 h-10 rounded-full border border-study-sand-200/50 dark:border-study-olive-800/40 flex items-center justify-center hover:bg-study-sand-200/30 dark:hover:bg-study-olive-800/20 transition-all">
+                        <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+
+            <p class="absolute bottom-10 text-[10px] tracking-widest uppercase opacity-40">Audio modulated continuously in 8D orbits</p>
+        </div>
+
+        <!-- FOOTER -->
+        <footer class="w-full py-6 text-center border-t border-study-sand-200/50 dark:border-study-olive-800/10 backdrop-blur-md relative z-10 text-xs opacity-65 flex flex-col sm:flex-row justify-between items-center px-6 md:px-12 gap-3">
+            <div>
+                &copy; 2026 AuraFocus. Designed for calm, deep cognitive work.
+            </div>
+            <div class="flex space-x-4">
+                <span class="hover:text-study-gold cursor-pointer transition-colors" id="btnHelp">Help</span>
+                <span>&middot;</span>
+                <span class="hover:text-study-gold cursor-pointer transition-colors" id="btnAbout">Aesthetics Suite</span>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Custom Beautiful Minimalistic System Message Toast Panel -->
+    <div id="toastNotification" class="fixed bottom-6 right-6 z-50 premium-glass-light dark:premium-glass-dark px-5 py-3.5 rounded-2xl shadow-2xl flex items-center space-x-3 pointer-events-none border border-study-gold/30 opacity-0 transform translate-y-20 transition-all duration-300">
+        <div class="w-8 h-8 rounded-full bg-study-gold/15 flex items-center justify-center text-study-gold">
+            <i data-lucide="award" id="toastIcon" class="w-4.5 h-4.5"></i>
+        </div>
+        <div>
+            <h4 id="toastTitle" class="text-xs font-bold text-study-sand-800 dark:text-white">Session Milestone!</h4>
+            <p id="toastMessage" class="text-[10px] opacity-75 mt-0.5">Focus time achieved, great study focus progress.</p>
+        </div>
+    </div>
+
+    <!-- Help / About dialog overlay -->
+    <div id="aboutModal" class="fixed inset-0 bg-black/40 backdrop-blur-md z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
+        <div class="premium-glass-light dark:premium-glass-dark rounded-[32px] p-6 md:p-8 max-w-md w-full mx-4 shadow-2xl border border-white/20 transform scale-95 transition-transform duration-300">
+            <div class="flex justify-between items-start mb-4">
+                <div class="flex items-center space-x-2">
+                    <i data-lucide="feather" class="text-study-gold w-5 h-5"></i>
+                    <h3 class="font-serif italic text-lg font-bold">AuraFocus Workspace</h3>
+                </div>
+                <button id="closeModalBtn" class="p-1 rounded-full hover:bg-study-sand-200 dark:hover:bg-study-olive-800/50 transition-colors">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+            
+            <p class="text-xs leading-relaxed mb-4 opacity-80">
+                AuraFocus is constructed strictly for students seeking high quality visual and cognitive focus. It combines high end minimalism (cream, clay, sand, olive) with real-time browser-panned focus tones.
+            </p>
+
+            <h4 class="text-xs font-bold text-study-gold mb-2 uppercase tracking-wide">Key Features Explained</h4>
+            <ul class="space-y-2 text-[11px] opacity-75 list-none">
+                <li class="flex items-start"><span class="text-study-gold mr-1.5">✓</span> <strong>8D Wave Synthesizer:</strong> Plays actual binaural rhythms in rotating spatial space without audio tracks.</li>
+                <li class="flex items-start"><span class="text-study-gold mr-1.5">✓</span> <strong>3D Tilt deck:</strong> Moving your pointer tilts the central deck visually for structural weight.</li>
+                <li class="flex items-start"><span class="text-study-gold mr-1.5">✓</span> <strong>Cozy Task Spotlight:</strong> Highlight a single core objective to stay completely focused.</li>
+            </ul>
+
+            <button id="modalOkBtn" class="w-full mt-6 py-2.5 bg-study-gold hover:bg-study-gold/95 active:scale-95 text-white font-semibold text-xs rounded-xl shadow-md transition-all">
+                Return to Focus Desk
+            </button>
+        </div>
+    </div>
+
+    <script src="app.js" defer></script>
+</body>
+</html>
